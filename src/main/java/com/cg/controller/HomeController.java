@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
-
 public class HomeController {
 
     private String getPrincipal() {
@@ -60,7 +59,6 @@ public class HomeController {
     @Autowired
     private ProductService productService;
 
-
     @GetMapping
     public ModelAndView showHomePage() {
         ModelAndView modelAndView = new ModelAndView();
@@ -72,7 +70,11 @@ public class HomeController {
 
         List<Category> categories = categoryService.findAll();
 
-        List<Product> productList = productService.findAll();
+        List<Product> productList = productService.findAllProductIsExist();
+
+        Iterable<Product> Category1 = productService.findAllByCategoryName("Art and Photography");
+        Iterable<Product> Category2 = productService.findAllByCategoryName("Business and Economics");
+        Iterable<Product> Category3 = productService.findAllByCategoryName("Dictionary");
 
 
         if (getPrincipal().equals("anonymousUser") || customerService.findCustomerByUserUsername(getPrincipal())==null) {
@@ -97,12 +99,11 @@ public class HomeController {
 //        12 quyen sach moi duoc nhap hang gan day nhat
         modelAndView.addObject("MostChoice", productList);
 //        12 quyen sach duoc order nhieu nhat
-        modelAndView.addObject("Category1", productList);
-//        12 quyen sach trong loai sach duoc chon
-        modelAndView.addObject("Category2", productList);
-//        12 quyen sach trong loai sach duoc chon
-        modelAndView.addObject("Category3", productList);
-//        12 quyen sach trong loai sach duoc chon
+
+
+        modelAndView.addObject("Category1", Category1);
+        modelAndView.addObject("Category2", Category2);
+        modelAndView.addObject("Category3", Category3);
 
         modelAndView.addObject("title", title);
 
@@ -135,6 +136,10 @@ public class HomeController {
     public ModelAndView showProductDetailPage(@PathVariable String slug) {
         ModelAndView modelAndView = new ModelAndView();
         Product product = productService.findBySlug(slug);
+        List<Product> recommendProduct = productService.findAllProductIsExist();
+        List<CategoryGroup> categoryGroups = categoryGroupService.findAll();
+        List<Category> categories = categoryService.findAll();
+
         modelAndView.addObject("product", product);
         modelAndView.setViewName("/product-detail");
 
@@ -145,16 +150,16 @@ public class HomeController {
             Customer customer = customerService.findCustomerByUserUsername(getPrincipal());
             modelAndView.addObject("username", getPrincipal());
             modelAndView.addObject("customer", customer);
-
         }
-
+        modelAndView.addObject("recommendProduct", recommendProduct);
+        modelAndView.addObject("categoryGroups", categoryGroups);
+        modelAndView.addObject("categories", categories);
         String title = "SunRise - Book Store";
         modelAndView.addObject("title", title);
         return modelAndView;
     }
 
     @GetMapping("/my-account.html")
-//    public ModelAndView listCustomers(@CookieValue String JWT) {
     public ModelAndView listCustomers() {
         System.out.println(getPrincipal());
         ModelAndView modelAndView = new ModelAndView();
@@ -185,15 +190,18 @@ public class HomeController {
 
         List<CategoryGroup> categoryGroups = categoryGroupService.findAll();
         List<Category> categories = categoryService.findAll();
+        List<Product> productList = productService.findAllProductIsExist();
 
+        modelAndView.addObject("categoryGroups", categoryGroups);
+        modelAndView.addObject("categories", categories);
+        modelAndView.addObject("NewArrivals", productList);
 
         if (getPrincipal().equals("anonymousUser") || customerService.findCustomerByUserUsername(getPrincipal())==null) {
             modelAndView.addObject("username", false);
             modelAndView.setViewName("/login-register.html");
         } else {
             Customer customer = customerService.findCustomerByUserUsername(getPrincipal());
-            modelAndView.addObject("categoryGroups", categoryGroups);
-            modelAndView.addObject("categories", categories);
+
             modelAndView.addObject("username", getPrincipal());
             modelAndView.addObject("customer", customer);
             Cart cart = cartService.findCartsByCustomer(customer) ;
@@ -231,7 +239,7 @@ public class HomeController {
     public ModelAndView showCheckoutPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("checkout");
-        String title = "SunRise - Book Store ";
+        String title = "SunRise - Book Store";
 
 
         if (getPrincipal().equals("anonymousUser") || customerService.findCustomerByUserUsername(getPrincipal())==null) {
@@ -248,13 +256,13 @@ public class HomeController {
 
             BigDecimal sub_total = BigDecimal.valueOf(0);
             BigDecimal grand_total = BigDecimal.valueOf(0);
-            BigDecimal money_details ;
+            BigDecimal money_details;
             for (CartDetail cartDetail : cartDetailList){
                 money_details = cartDetail.getProduct().getLastPrice().multiply(BigDecimal.valueOf(cartDetail.getQuantity()));
                 sub_total = sub_total.add(money_details) ;
             }
 
-            grand_total = sub_total ;// co the nhan voi phi ship
+            grand_total = sub_total ;// co the cong voi phi ship
 
             modelAndView.addObject("username", getPrincipal());
             modelAndView.addObject("customer", customer);
@@ -281,6 +289,40 @@ public class HomeController {
             }
 
         ModelAndView modelAndView = new ModelAndView("/login-register.html");
+        return modelAndView;
+    }
+
+    @GetMapping("/category-group/{slug}")
+    private ModelAndView showProductWithCategoryGroup(@PathVariable String slug) {
+        ModelAndView modelAndView = new ModelAndView("/category-product.html");
+        CategoryGroup categoryGroupBySlug = categoryGroupService.findAllBySlug(slug);
+
+        List<Product> productList = productService.findAllByCategoryGroupSlug(slug);
+        List<CategoryGroup> categoryGroups = categoryGroupService.findAll();
+        List<Category> categories = categoryService.findAll();
+        List<Product> recommendProduct = productService.findAllProductIsExist();
+        String title = "SunRise - Book Store";
+
+        if (getPrincipal().equals("anonymousUser") || customerService.findCustomerByUserUsername(getPrincipal())==null) {
+            modelAndView.addObject("username", false);
+        } else {
+            Customer customer = customerService.findCustomerByUserUsername(getPrincipal());
+
+            modelAndView.addObject("username", getPrincipal());
+            modelAndView.addObject("customer", customer);
+            Cart cart = cartService.findCartsByCustomer(customer) ;
+            modelAndView.addObject("cart", cart);
+
+        }
+
+        modelAndView.addObject("recommendProduct", recommendProduct);
+        modelAndView.addObject("title", title);
+        modelAndView.addObject("categoryGroupBySlug", categoryGroupBySlug);
+        modelAndView.addObject("productList", productList);
+        modelAndView.addObject("categoryGroups", categoryGroups);
+        modelAndView.addObject("categories", categories);
+        modelAndView.addObject("name", slug);
+
         return modelAndView;
     }
 

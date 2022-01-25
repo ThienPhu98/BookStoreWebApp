@@ -84,4 +84,9 @@ public class UserServiceImpl implements UserService {
 //        return (UserDetails) userOptional.get();
     }
 
+    @Override
+    public List<User> findAllRolesExceptCustomer(){
+        return userRepository.findAllRolesExceptCustomer();
+    }
+
 }

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -43,4 +45,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product findBySlug(String slug);
 
+    @Query(value = "SELECT p FROM Product p WHERE p.categoryGroup.category.name= ?1 AND p.deleted = false")
+    List<Product> findAllByCategoryName(String name);
+
+    @Query(value = "SELECT p FROM Product p WHERE p.categoryGroup.slug= ?1 AND p.deleted = false")
+    List<Product> findAllByCategoryGroupSlug(String slug);
+
+    @Query(value = "SELECT p FROM Product p WHERE p.deleted = false")
+    List<Product> findAllProductIsExist();
 }

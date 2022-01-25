@@ -10,16 +10,19 @@
     {
       "name": "application.uploader.api-key",
       "type": "java.lang.String",
+      "description": "Description for application.uploader.api-key.",
       "sourceType": "com.cg.uploader.CloudinaryConfig"
     },
     {
       "name": "application.uploader.api-secret",
       "type": "java.lang.String",
+      "description": "Description for application.uploader.api-secret.",
       "sourceType": "com.cg.uploader.CloudinaryConfig"
     },
     {
       "name": "application.uploader.cloud-name",
       "type": "java.lang.String",
+      "description": "Description for application.uploader.cloud-name.",
       "sourceType": "com.cg.uploader.CloudinaryConfig"
     }
   ],

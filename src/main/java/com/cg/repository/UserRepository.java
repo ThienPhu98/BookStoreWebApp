@@ -15,7 +15,11 @@ public interface UserRepository extends JpaRepository <User, Long> {
 
     User getByUsername(String username);
 
-    List<User> findAllByDeletedIsFalse() ;
+    List<User> findAllByDeletedIsFalse();
+
+    @Query("SELECT u FROM User u WHERE NOT u.role.code = 'CUSTOMER'"
+    )
+    List<User> findAllRolesExceptCustomer();
 
 //    @Query("SELECT NEW com.cg.model.dto.UserDTO (u.id, u.username) FROM User u WHERE u.username = ?1")
 //    UserDTO findUserDTOByUsername(String username);

@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/cp/api/cart-detail/update",
                         "/errorPage.html",
                         "/cp/api/products/getById/**",
+                        "/cp/api/products/getAll/",
                         "/cp/api/order/create",
                         "/logout-customer.html",
                         "/product-details/**",
@@ -81,9 +82,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/login-register.html",
                         "/cp/api/auth/register-customer",
                         "/cp/api/auth/login",
+                        "/category-group/**",
                         "/cp/api/auth/register").permitAll()
-                .antMatchers("/cp/users/**").hasAnyAuthority("ADMIN")
-                .antMatchers("/cp").hasAnyAuthority("ADMIN","USER")
+                .antMatchers("/cp/**").hasAnyAuthority("ADMIN","USER")
+                .antMatchers("/cp/users/**","/cp/product/**","/cp/customer/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/test").permitAll()
                 .antMatchers("/resources/**", "/assets/**").permitAll()
                 .antMatchers(

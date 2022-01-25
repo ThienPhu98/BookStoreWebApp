@@ -14,7 +14,6 @@
     <link href="/cp/assets/libs/select2/select2.min.css" rel="stylesheet" type="text/css">
     <link href="/cp/assets/libs/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" type="text/css">
     <link href="/cp/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
-    <!--    <link href="/cp/assets/libs/dropzone/dropzone.min.css" rel="stylesheet" type="text/css">-->
 
     <!-- Summernote css -->
     <link href="/cp/assets/libs/summernote/summernote-bs4.css" rel="stylesheet" type="text/css">
@@ -133,7 +132,7 @@
                                         <label class="col-form-label">Publication Date</label>
                                         <input class="col-sm-8 form-control ng-pristine ng-valid ng-touched" type="date"
                                                th:field="*{publicationDate}">
-                                        <!--                                        <input type="date"   class=" form-control" th:field="*{publicationDate}">-->
+                                        <!--  <input type="date"   class=" form-control" th:field="*{publicationDate}">-->
                                     </div>
                                 </div>
 
@@ -156,28 +155,27 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="col-form-label">Discount amount</label>
-                                        <input style="color: yellow" type="text" th:field="*{discountAmount}" value="0" class=" form-control" readonly>
+                                        <input type="text" th:field="*{discountAmount}" value="0" class=" form-control" readonly>
                                     </div>
                                 </div>
 
                                 <div class="row form-group">
                                     <div class="col-md-6">
                                         <label class="col-form-label">Last price</label>
-                                        <input style="color: red" type="text" th:field="*{lastPrice}" value="0" class="form-control" readonly>
+                                        <input type="text" th:field="*{lastPrice}" value="0" class="form-control" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <!--                                        <label class="col-form-label">Reward point</label>-->
-                                        <!--                                        <input type="text" th:field="*{rewardPoint}" value="0" class=" form-control">-->
+                                        <!-- <label class="col-form-label">Reward point</label>-->
+                                        <!-- <input type="text" th:field="*{rewardPoint}" value="0" class=" form-control">-->
                                     </div>
                                 </div>
 
                                 <div class="row form-group">
                                     <div class="col-md-12">
                                         <label class="col-form-label">Description</label>
-<!--                                        <div id="summernote-editor" name="description">-->
-<!--                                        </div>-->
-                                        <textarea th:field="*{description}" rows="9" style="width: 100%; resize: none" >
-                                        </textarea>
+<!--                                        <div id="description" name="description"></div>-->
+                                        <div id="summer-note"></div>
+<!--                                        <textarea th:field="*{description}" rows="9" style="width: 100%; resize: none" ></textarea>-->
                                     </div>
                                 </div>
 
@@ -228,71 +226,41 @@
 <script src="/cp/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
 <script src="/cp/assets/libs/jquery-mask-plugin/jquery.mask.min.js"></script>
 
-<!--<script src="/cp/assets/libs/dropzone/dropzone.min.js"></script>-->
-
-<!-- Summernote js -->
 <script src="/cp/assets/libs/summernote/summernote-bs4.min.js"></script>
 
-<!-- init js -->
 <script src="/cp/assets/js/pages/form-advanced.init.js"></script>
 <script src="/cp/assets/js/pages/form-summernote.init.js"></script>
-<!--<script src="/cp/assets/js/pages/form-fileuploads.init.js"></script>-->
 
 <!-- App js -->
 <script src="/cp/assets/js/app.min.js"></script>
-
-<!--<th:block th:replace="/cp/layout/script"/>-->
 
 
 
 <div class="footer-error">
     <div id="message-alert">
-<!--        <th:block th:if="${script} == true">-->
-<!--            <div class="alert-danger">-->
-<!--                <h5>Please correct errors below:</h5>-->
-<!--                <ul>-->
-<!--                    <li th:each="err : ${#fields.errors('categoryGroup.*')}" th:text="${err}"></li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </th:block>-->
-<!--        <th:block th:if="${success}">-->
-<!--            <div class="alert-success">-->
-<!--                <h5><span th:text="${success}"></span></h5>-->
-<!--            </div>-->
-<!--            <span id="close">X</span>-->
-<!--            <script th:inline="javascript">-->
-<!--                $("#close").on("click", function () {-->
-<!--                    $(".footer-error").css("height", 0);-->
-<!--                    $("#message-alert").empty();-->
-<!--                });-->
-
-<!--                $(".alert-success").fadeTo(5000, 500).fadeOut(1000, function () {-->
-<!--                    $(".footer-error").css("height", 0);-->
-<!--                    $("#message-alert").empty();-->
-<!--                });-->
-<!--            </script>-->
-<!--        </th:block>-->
-<!--        <th:block th:if="${error}">-->
-<!--            <div class="alert-danger">-->
-<!--                <ul>-->
-<!--                    <li th:text="${error}"></li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </th:block>-->
-
         <div id="message-error-data" class="alert-danger hide"></div>
     </div>
 </div>
 
-
-<!--<script src="/assets/js/sweetalert2.min.js"></script>-->
-<!--<script src="/assets/js/magnific-popup-1.1.0.js"></script>-->
-<!--<script src="/assets/js/jquery-3.6.0.js"></script>-->
 <script src="/assets/js/jquery.validate-1.19.3.min.js"></script>
 <script src="/assets/js/notify-0.4.1.min.js"></script>
 <script src="/assets/js/product-validation.js"></script>
 
 <script>
+
+    let page = {
+        urls: {
+        },
+        element: {},
+        commands: {},
+        loadData: {},
+        dialogs: {
+            element: {},
+            commands: {}
+        }
+    }
+
+    page.element.summerNote = $('#summer-note');
 
     function openFile(event) {
         let input = event.target;
@@ -331,7 +299,8 @@
         formData.append("percentageDiscount",  parseInt($("#percentageDiscount").val()));
         formData.append("discountAmount",  parseInt($("#discountAmount").val()));
         formData.append("lastPrice",  parseInt($("#lastPrice").val()));
-        formData.append("description", $("#description").val());
+        // formData.append("description", $("#description").val());
+        formData.append("description", page.element.summerNote.summernote('code'));
         formData.append("file", $("#imageFile")[0].files[0]);
 
 
@@ -342,7 +311,6 @@
             processData: false,
             url: "/cp/api/products/create",
             data: formData
-            // data : JSON.stringify(productDTO)
         }).done((data) => {
             $.notify("Create product successfully !", "success");
 
@@ -355,12 +323,6 @@
 
             $("#message-error-data").empty().removeClass("hide").addClass("show");
              let str="";
-
-            // $.each(jqXHR.responseJSON, function (key, value) {
-            //     str += `<label id="${key}-error" class="error" for="${key}">${value}</label>`;
-            //     $("#" + key).addClass("error");
-            // });
-
 
             if (jqXHR.status === 401) {
                 str += `<label id="message-error" class="error" for="message">An error occurred. Please try again later!</label>`;
@@ -394,9 +356,21 @@
 
     }
 
-    $("#bt-create").on("click", function () {
-        createProduct();
-    })
+    page.initializeControlEvent = () => {
+
+        page.element.summerNote.summernote({
+            tabsize: 2,
+            height: 350,
+        });
+
+        $("#bt-create").on("click", function () {
+            createProduct();
+        })
+    }
+
+    $(function() {
+        page.initializeControlEvent();
+    });
 
 </script>
 

@@ -69,7 +69,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void remove(Long id) {
-
     }
 
     @Override
@@ -144,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new DataInputException("Upload hình ảnh thất bại");
+            throw new DataInputException("Upload image fail!");
         }
     }
 
@@ -180,6 +179,21 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(product);
 
+    }
+
+    @Override
+    public List<Product> findAllByCategoryName(String name) {
+        return productRepository.findAllByCategoryName(name);
+    }
+
+    @Override
+    public List<Product> findAllByCategoryGroupSlug(String slug){
+        return productRepository.findAllByCategoryGroupSlug(slug);
+    }
+
+    @Override
+    public List<Product> findAllProductIsExist(){
+        return productRepository.findAllProductIsExist();
     }
 }
 

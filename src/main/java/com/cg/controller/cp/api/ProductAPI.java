@@ -31,6 +31,12 @@ public class ProductAPI {
     @Autowired
     private AppUtils appUtils;
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Product>> findAllProduct()  {
+        List<Product> productList = productService.findAll();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<Product> findProductById(@PathVariable Long id)  {
@@ -77,13 +83,19 @@ public class ProductAPI {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/change-active/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws IOException {
 
         Optional<Product> product = productService.findById(id);
 
         if (product.isPresent()) {
-            productService.delete(product.get());
+            Product productChange = product.get();
+
+            if(productChange.isDeleted()) {
+                productChange.setDeleted(false);
+            } else {
+                productChange.setDeleted(true);
+            }
 
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } else {

@@ -6,6 +6,7 @@ import com.cg.model.dto.ProductDTO;
 import com.cg.service.IGeneralService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductService extends IGeneralService<Product> {
@@ -24,7 +25,10 @@ public interface ProductService extends IGeneralService<Product> {
 
     Product findBySlug(String slug);
 
+    List<Product> findAllByCategoryName(String name);
 
+    List<Product> findAllByCategoryGroupSlug(String slug);
 
+    List<Product> findAllProductIsExist();
 
 }

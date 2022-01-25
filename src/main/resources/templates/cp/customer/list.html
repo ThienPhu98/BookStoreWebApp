@@ -68,7 +68,7 @@
                                             <th:block th:if="!${item.deleted}">
                                                 <td>Active</td>
                                                 <td class="text-center">
-                                                    <a class="btn btn-outline-danger" th:href="@{/cp/customers/change-active/__${item.getId()}__ }">
+                                                    <a class="btn btn-outline-danger" th:href="@{/cp/users/change-active/__${item.getId()}__ }">
                                                         <i class="fas fa-user-times"></i>
                                                     </a>
                                                 </td>
@@ -78,7 +78,7 @@
                                                 <td>Disable</td>
                                                 <td class="text-center">
                                                     <a class="btn btn-outline-success" th:href="@{/cp/customers/change-active/__${item.getId()}__ }">
-                                                        <i class="fas fa-user-check"></i>
+                                                        <i class="fas fa-check-circle"></i>
                                                     </a>
                                                 </td>
                                             </th:block>

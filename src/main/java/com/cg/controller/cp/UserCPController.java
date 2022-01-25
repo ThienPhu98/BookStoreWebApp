@@ -30,7 +30,7 @@ public class UserCPController {
     @GetMapping("")
     public ModelAndView showAllUser(){
         ModelAndView modelAndView = new ModelAndView("cp/user/list") ;
-        List<User> userList = userService.findAllByDeletedIsFalse() ;
+        List<User> userList = userService.findAllRolesExceptCustomer() ;
         modelAndView.addObject("userList",userList);
         return modelAndView;
     }

@@ -20,4 +20,6 @@ public interface UserService extends IGeneralService<User>, UserDetailsService {
 
     List<User> findAllByDeletedIsFalse() ;
 
+    List<User> findAllRolesExceptCustomer();
+
 }

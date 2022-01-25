@@ -2,11 +2,18 @@ package com.cg.controller.cp;
 
 
 import com.cg.model.Category;
+import com.cg.model.Export;
+import com.cg.model.Import;
 import com.cg.model.Product;
 import com.cg.service.category.CategoryService;
+import com.cg.service.product.ExportService;
+import com.cg.service.product.ImportService;
 import com.cg.service.product.ProductService;
+import com.cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +29,12 @@ public class ProductCPController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ImportService importService;
+
+    @Autowired
+    private ExportService exportService;
 
     @GetMapping
     public ModelAndView showCpProductIndex() {
@@ -57,62 +70,21 @@ public class ProductCPController {
         return modelAndView;
     }
 
-//    @PostMapping(value = "/create")
-//    public ModelAndView create(@Validated @ModelAttribute("product") Product product, BindingResult bindingResult) {
-//        ModelAndView modelAndView = new ModelAndView();
-//
-//        List<Category> categories = CategoryService.findAll();
-//
-//        modelAndView.addObject("categories", categories);
-//
-//        if (bindingResult.hasFieldErrors()) {
-//            modelAndView.addObject("script", true);
-//        }
-//        else {
-//            String slug = AppUtils.removeNonAlphanumeric(product.getName());
-//
-//            Boolean existSlug = productService.existsBySlugEquals(slug);
-//
-//            if (existSlug) {
-//                modelAndView.addObject("error", "The name already exists");
-//            }
-//            else {
-//                try {
-//                    product.setSlug(slug);
-//                    productService.save(product);
-//
-//                    modelAndView.addObject("product", new Product());
-//                    modelAndView.addObject("success", "Successfully added new product");
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    modelAndView.addObject("error", "Invalid data, please contact system administrator");
-//                }
-//            }
-//        }
-//
-//        modelAndView.setViewName("cp/product/create");
-//
-//        return modelAndView;
-//    }
-
-    @GetMapping("/edit/{id}")
-    public ModelAndView showEdit(@PathVariable Long id) {
-
+    @GetMapping("/importHistory")
+    public ModelAndView showImportList() {
         ModelAndView modelAndView = new ModelAndView();
+        List<Import> imports = importService.findAll();
+        modelAndView.setViewName("cp/product/importHistory");
+        modelAndView.addObject("imports", imports);
+        return modelAndView;
+    }
 
-        Optional<Product> product = productService.findById(id);
-
-        if (product.isPresent()) {
-            modelAndView.addObject("product", product);
-        } else {
-            modelAndView.addObject("product", new Product());
-            modelAndView.addObject("script", false);
-            modelAndView.addObject("success", false);
-            modelAndView.addObject("error", "Invalid product information");
-        }
-
-        modelAndView.setViewName("cp/product/edit");
-
+    @GetMapping("/exportHistory")
+    public ModelAndView showExportList() {
+        ModelAndView modelAndView = new ModelAndView();
+        List<Export> exports = exportService.findAll();
+        modelAndView.setViewName("cp/product/exportHistory");
+        modelAndView.addObject("exports", exports);
         return modelAndView;
     }
 
